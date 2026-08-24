@@ -1,0 +1,87 @@
+// Prisma schema for Vybe
+// Default datasource is SQLite for zero-config local dev.
+// To use PostgreSQL: set provider = "postgresql" and DATABASE_URL to your Postgres connection string.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String            @id @default(cuid())
+  email             String            @unique
+  username          String            @unique
+  password          String
+  avatarUrl         String?
+  posts             Post[]
+  comments          Comment[]
+  reactions         Reaction[]
+  commentReactions  CommentReaction[]
+  createdCommunities Community[]      @relation("CommunityCreator")
+  createdAt         DateTime          @default(now())
+}
+
+model Community {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  emoji       String   @default("✨")
+  creator     User     @relation("CommunityCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId   String
+  posts       Post[]
+  createdAt   DateTime @default(now())
+}
+
+model Post {
+  id          String     @id @default(cuid())
+  title       String
+  content     String
+  imageUrl    String?
+  community   Community  @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  communityId String
+  author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId    String
+  comments    Comment[]
+  reactions   Reaction[]
+  createdAt   DateTime   @default(now())
+}
+
+model Comment {
+  id        String            @id @default(cuid())
+  content   String
+  post      Post              @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+  author    User              @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+  reactions CommentReaction[]
+  createdAt DateTime          @default(now())
+}
+
+// One emoji reaction per user per post. Changing reaction updates the emoji;
+// clicking the same emoji again removes it.
+model Reaction {
+  id      String @id @default(cuid())
+  emoji   String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String
+  post    Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId  String
+
+  @@unique([userId, postId])
+}
+
+model CommentReaction {
+  id        String  @id @default(cuid())
+  emoji     String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String
+
+  @@unique([userId, commentId])
+}

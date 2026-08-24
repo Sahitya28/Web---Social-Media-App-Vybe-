@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: #f5f7ff;
+  background-image:
+    radial-gradient(circle at 10% 0%, rgba(76, 111, 255, 0.08), transparent 40%),
+    radial-gradient(circle at 90% 15%, rgba(46, 196, 182, 0.08), transparent 40%),
+    radial-gradient(circle at 50% 100%, rgba(255, 107, 107, 0.06), transparent 45%);
+  background-attachment: fixed;
+  color: #20232b;
+  min-height: 100vh;
+}
+
+.card {
+  background: #ffffff;
+  border: 1.5px solid #c9d6ff;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(76, 111, 255, 0.08);
+}
+
+.gradient-text {
+  background-image: linear-gradient(135deg, #4c6fff 0%, #2ec4b6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-btn {
+  background-image: linear-gradient(135deg, #4c6fff 0%, #2ec4b6 100%);
+  transition: filter 0.15s ease, transform 0.1s ease;
+}
+.gradient-btn:hover {
+  filter: brightness(1.08);
+}
+.gradient-btn:active {
+  transform: scale(0.97);
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #edf1ff 25%, #c9d6ff 37%, #edf1ff 63%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+  border-radius: 1rem;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+input, textarea {
+  background: #ffffff;
+  color: #20232b;
+  border-color: #c9d6ff !important;
+}
+input::placeholder, textarea::placeholder {
+  color: #a3aecb;
+}
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #4c6fff !important;
+  box-shadow: 0 0 0 2px rgba(76, 111, 255, 0.18);
+}
+
+.reaction-pill {
+  transition: transform 0.1s ease;
+}
+.reaction-pill:active {
+  transform: scale(0.9);
+}
